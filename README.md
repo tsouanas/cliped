@@ -25,6 +25,6 @@ bind[clipedlast]     = MOD+Shift+i
 
 ## Credits
 
-Based on / influenced by:
+Based on / influenced by: @hrantzsch 's vimclip:
 https://github.com/hrantzsch/vimclip
 
