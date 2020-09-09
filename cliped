@@ -1,0 +1,38 @@
+#!/bin/sh
+
+CLIPDIR=/tmp
+CLIPNAME="cliped.${USER}"
+CLIPLAST="${CLIPDIR}/${CLIPNAME}"
+
+# die without xsel
+command -v xsel || exit 1
+
+# clean mode
+if [ X"$1" = X"clean" ]; then
+    rm -f "$CLIPLAST" "$CLIPDIR"/"$CLIPNAME".??????
+    exit 0
+fi
+
+# decide which file to edit
+if [ X"$1" = X"last" ] && [ -r "$CLIPLAST" ]; then
+    CLIPFILE=$(readlink "$CLIPLAST")
+else
+    CLIPFILE=$(mktemp -p "$CLIPDIR" -t "${CLIPNAME}.XXXXXX")
+fi
+
+# edit the file
+if [ X"$EDITOR" = X"" ]; then
+    vi "$CLIPFILE"
+else
+    $EDITOR "$CLIPFILE"
+fi
+
+# clip if non-empty
+if [ -s "$CLIPFILE" ]; then
+    xsel -i -p < "$CLIPFILE"
+    xsel -i -b < "$CLIPFILE"
+    ln -sf "$CLIPFILE" "$CLIPLAST"
+else
+    rm -f "$CLIPFILE" "$CLIPLAST"
+fi
+
