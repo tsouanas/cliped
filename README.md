@@ -17,10 +17,13 @@ If `$EDITOR` is unset, default to `vi(1)`.
 Just add some shortcut to run it via your window manager and you're set.
 For example, in spectrwm I set:
 ```
-program[cliped]      = xterm -title 'cliped' -e 'cliped'
-program[clipedlast]  = xterm -title 'cliped' -e 'cliped last'
-bind[cliped]         = MOD+i
-bind[clipedlast]     = MOD+Shift+i
+program[cliped]      = xterm -name 'clipedterm' -title 'clipedterm' -fs 18 -e 'cliped'
+program[clipedlast]  = xterm -name 'clipedterm' -title 'clipedterm' -fs 18 -e 'cliped last'
+```
+and define the following shortcuts:
+```
+bind[cliped]      = MOD+i
+bind[clipedlast]  = MOD+Shift+i
 ```
 
 ## Credits
