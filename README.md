@@ -31,6 +31,12 @@ and the following quirk:
 ```
 quirk[XTerm:clipedterm] = FLOAT
 ```
+while in AeroSpace I set:
+```
+cmd-i = 'exec-and-forget /Applications/WezTerm.app/Contents/MacOS/wezterm start -- ~/bin/cliped'
+cmd-shift-i = 'exec-and-forget /Applications/WezTerm.app/Contents/MacOS/wezterm start -- ~/bin/cliped last'
+cmd-alt-i = 'exec-and-forget ~/bin/cliped clean'
+```
 
 ## Credits
 
