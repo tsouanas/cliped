@@ -4,12 +4,28 @@ CLIPDIR=/tmp
 CLIPNAME="cliped.${USER}"
 CLIPLAST="${CLIPDIR}/${CLIPNAME}"
 
-# die without xsel
-command -v xsel || exit 1
+# set editor
+if [ X"$VISUAL" != X"" ]; then
+    CLIPEDITOR=$VISUAL
+elif [ X"$EDITOR" != X"" ]; then
+    CLIPEDITOR=$EDITOR
+else
+    CLIPEDITOR=vi
+fi
+
+UNAME=$(uname)
+
+# check that we have the actual copy-paster for our OS
+if [ $UNAME = "Darwin" ]; then
+    COPYER=pbcopy
+else
+    COPYER=xsel
+fi
+command -v $COPYER || (echo "${COPYER} not found" ; exit 1)
 
 # clean mode
 if [ X"$1" = X"clean" ]; then
-    rm -f "$CLIPLAST" "$CLIPDIR"/"$CLIPNAME".??????
+    rm -f "$CLIPLAST" "$CLIPDIR"/"$CLIPNAME".*
     exit 0
 fi
 
@@ -20,17 +36,17 @@ else
     CLIPFILE=$(mktemp -p "$CLIPDIR" -t "${CLIPNAME}.XXXXXX")
 fi
 
-# edit the file
-if [ X"$EDITOR" = X"" ]; then
-    vi "$CLIPFILE"
-else
-    $EDITOR "$CLIPFILE"
-fi
+# open editor
+$CLIPEDITOR "$CLIPFILE"
 
 # clip if non-empty
 if [ -s "$CLIPFILE" ]; then
-    xsel -i -p < "$CLIPFILE"
-    xsel -i -b < "$CLIPFILE"
+    if [ $UNAME = "Darwin" ]; then
+        pbcopy < "$CLIPFILE"
+    else
+        xsel -i -p < "$CLIPFILE"
+        xsel -i -b < "$CLIPFILE"
+    fi
     ln -sf "$CLIPFILE" "$CLIPLAST"
 else
     rm -f "$CLIPFILE" "$CLIPLAST"
